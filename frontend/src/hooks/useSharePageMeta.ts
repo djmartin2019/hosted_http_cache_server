@@ -8,7 +8,7 @@ export function useSharePageMeta(user: GitHubUserPayload | null) {
   useEffect(() => {
     if (!user) return
 
-    const title = `@${user.username} · GitHub card`
+    const title = `@${user.username} on GitHub · public profile & stats`
     const description = `${user.public_repos} public repos · ${user.followers} followers on GitHub`
     const ogImage = `${window.location.origin}/og/${encodeURIComponent(user.username)}.png`
     const canonical = `${window.location.origin}/u/${encodeURIComponent(user.username)}`
@@ -27,14 +27,18 @@ export function useSharePageMeta(user: GitHubUserPayload | null) {
     addMeta('property', 'og:title', title)
     addMeta('property', 'og:description', description)
     addMeta('property', 'og:image', ogImage)
+    addMeta('property', 'og:image:secure_url', ogImage)
     addMeta('property', 'og:image:width', '1200')
     addMeta('property', 'og:image:height', '630')
+    addMeta('property', 'og:image:type', 'image/png')
     addMeta('property', 'og:url', canonical)
     addMeta('property', 'og:type', 'profile')
     addMeta('name', 'twitter:card', 'summary_large_image')
     addMeta('name', 'twitter:title', title)
     addMeta('name', 'twitter:description', description)
     addMeta('name', 'twitter:image', ogImage)
+    addMeta('name', 'twitter:image:width', '1200')
+    addMeta('name', 'twitter:image:height', '630')
     addMeta('name', 'description', description)
 
     return () => {

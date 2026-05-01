@@ -27,7 +27,7 @@ export async function handleProfilePage(url, req) {
         const baseUrl = requestBaseUrl(req);
         const loginEnc = encodeURIComponent(user.login);
         const html = getIndexWithMeta({
-            title: `@${user.login} · GitHub card`,
+            title: `@${user.login} on GitHub · public profile & stats`,
             description,
             ogImage: `${baseUrl}/og/${loginEnc}.png`,
             canonical: `${baseUrl}/u/${loginEnc}`

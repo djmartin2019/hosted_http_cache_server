@@ -8,9 +8,11 @@ RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: runtime — install root deps (satori, resvg, react, fontsource), copy edge + origin + built SPA
-FROM node:22-alpine
-RUN apk add --no-cache curl
+# Stage 2: runtime — glibc (Debian) so @resvg/resvg-js native bindings work reliably (Alpine/musl often 500s at render time).
+FROM node:22-bookworm-slim
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 COPY package.json package-lock.json ./

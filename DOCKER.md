@@ -10,6 +10,10 @@
 
 The edge service reaches origin via `ORIGIN_URL` (set in `docker-compose.yml`), not `localhost`, so container networking works.
 
+The origin/runtime image uses **Debian bookworm-slim** (not Alpine) so the **`@resvg/resvg-js` native bindings** used for `/og/*.png` work reliably; Alpine often surfaced as HTTP 500 on OG renders.
+
+After fixing OG issues, **restart the stack** (or wait out TTL) so the edge cache does not keep serving an older error response for `/og/*`.
+
 ## On the VPS
 
 1. Install [Docker Engine](https://docs.docker.com/engine/install/) and the Compose plugin (often `docker compose` is bundled).

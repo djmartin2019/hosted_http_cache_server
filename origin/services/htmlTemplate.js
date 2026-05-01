@@ -48,13 +48,17 @@ export function getIndexWithMeta(opts) {
     <meta property="og:title" content="${escAttr(opts.title)}" />
     <meta property="og:description" content="${escAttr(opts.description)}" />
     <meta property="og:image" content="${escAttr(opts.ogImage)}" />
+    <meta property="og:image:secure_url" content="${escAttr(opts.ogImage)}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:url" content="${escAttr(opts.canonical)}" />
     <meta property="og:type" content="profile" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escAttr(opts.title)}" />
     <meta name="twitter:description" content="${escAttr(opts.description)}" />
-    <meta name="twitter:image" content="${escAttr(opts.ogImage)}" />`;
+    <meta name="twitter:image" content="${escAttr(opts.ogImage)}" />
+    <meta name="twitter:image:width" content="1200" />
+    <meta name="twitter:image:height" content="630" />`;
     return base.replace(NEEDLE, injection.trim());
 }
