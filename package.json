@@ -1,0 +1,10 @@
+{
+    "name": "http_on_edge",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "start:origin": "node origin/server.js",
+        "start:edge": "node edge/server.js"
+    }
+}

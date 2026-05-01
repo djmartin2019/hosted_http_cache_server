@@ -1,0 +1,59 @@
+# Stack: nginx (host 8080 -> container 80) + /dev proxy -> edge:3000 -> origin:4000
+# Host Apache can keep port 80; expose UI at http://VPS_IP:8080
+# Usage: docker compose up -d --build
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  origin:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    command: ["node", "origin/server.js"]
+    restart: unless-stopped
+    networks:
+      - app-network
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:4000/ >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  edge:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    command: ["node", "edge/server.js"]
+    environment:
+      ORIGIN_URL: http://origin:4000
+    depends_on:
+      origin:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/ >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    ports:
+      - "8080:80"
+    depends_on:
+      edge:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+    mem_limit: 512m
