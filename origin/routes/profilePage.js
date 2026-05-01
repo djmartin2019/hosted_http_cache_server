@@ -2,7 +2,8 @@ import { getUserData } from '../services/github.js';
 import { getIndexBase, getIndexWithMeta } from '../services/htmlTemplate.js';
 
 function requestBaseUrl(req) {
-    const proto = (req.headers['x-forwarded-proto'] || 'http').split(',')[0].trim();
+    let proto = (req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+    if (!proto) proto = 'http';
     const host = (req.headers['x-forwarded-host'] || req.headers.host || 'localhost').split(',')[0].trim();
     return `${proto}://${host}`;
 }

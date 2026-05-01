@@ -3,8 +3,8 @@ import { cacheConfig } from './cacheConfig.js';
 import { refreshInBackground } from '../services/refreshInBackground.js';
 import { fetchFromOrigin } from '../services/fetchFromOrigin.js';
 import { cacheStore } from './cacheStore.js';
-
-const cache = new Map();
+import { edgeCache } from './cacheInstance.js';
+import { forwardingHeaders } from './forwardingHeaders.js';
 
 const originBase = (process.env.ORIGIN_URL || 'http://localhost:4000').replace(/\/$/, '');
 
@@ -13,8 +13,9 @@ export async function cacheManager(req) {
     const originURL = `${originBase}${url.pathname}${url.search}`;
 
     const key = cacheKey(req.method, originURL);
+    const fwd = forwardingHeaders(req);
 
-    const cached = cache.get(key);
+    const cached = edgeCache.get(key);
 
     if (cached) {
        if (cached.expiry > Date.now()) {
@@ -23,14 +24,14 @@ export async function cacheManager(req) {
         } else {
             console.log("Edge HIT: stale");
             const stale = cacheConfig(cached);
-            refreshInBackground(key, originURL);
+            refreshInBackground(key, originURL, fwd);
             return stale;
         }
     }
 
     console.log("CACHE MISS");
-    const response = await fetchFromOrigin(originURL);
-    cacheStore(cache, key, response);
+    const response = await fetchFromOrigin(originURL, fwd);
+    cacheStore(edgeCache, key, response);
 
     return {
         ...response,
