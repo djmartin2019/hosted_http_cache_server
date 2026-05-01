@@ -6,5 +6,12 @@
     "scripts": {
         "start:origin": "node origin/server.js",
         "start:edge": "node edge/server.js"
+    },
+    "dependencies": {
+        "@fontsource/jetbrains-mono": "^5.2.8",
+        "@fontsource/syne": "^5.2.7",
+        "@resvg/resvg-js": "^2.6.2",
+        "react": "^19.2.5",
+        "satori": "^0.26.0"
     }
 }

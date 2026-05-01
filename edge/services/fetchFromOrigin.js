@@ -1,15 +1,21 @@
 export async function fetchFromOrigin(originUrl) {
-    const originRes = await fetch (originUrl);
+    const originRes = await fetch(originUrl);
 
-    console.log("ORIGIN CALLED");
+    console.log('ORIGIN CALLED');
 
-    const body = await originRes.text();
+    const buf = Buffer.from(await originRes.arrayBuffer());
+
+    const headers = {
+        'Content-Type': originRes.headers.get('content-type') || 'application/octet-stream'
+    };
+    const cc = originRes.headers.get('cache-control');
+    if (cc) {
+        headers['Cache-Control'] = cc;
+    }
 
     return {
         statusCode: originRes.status,
-        headers: {
-            "Content-Type": originRes.headers.get("content-type") || "application/json"
-        },
-        body
+        headers,
+        body: buf
     };
 }

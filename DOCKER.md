@@ -4,7 +4,7 @@
 
 | Service | Role |
 |--------|------|
-| **web** | Nginx (container :80, published as host **:8080**): SPA + `/dev/*` → edge |
+| **web** | Nginx (container :80, published as host **:8080**): SPA + `/dev/*`, `/u/*`, `/og/*` → edge (share HTML + OG PNG are edge-cached) |
 | **edge** | Cache layer on port 3000 (internal only) |
 | **origin** | Fetches GitHub on port 4000 (internal only) |
 

@@ -12,7 +12,7 @@ If you are here to run it locally or ship it on a VPS, you are in the right plac
 |--------|------|
 | **Origin** | Node HTTP server on **port 4000**. Serves `GET /dev/:username` and returns a trimmed JSON payload from GitHub. |
 | **Edge** | Node HTTP server on **port 3000**. Proxies to the origin, caches responses in memory, and can serve stale data while refreshing in the background. |
-| **Frontend** | Vite + React app. Resolves a username and shows avatar, followers, repos, and account age. |
+| **Frontend** | Vite + React app. Lookup on `/`, shareable “business card” profile on `/u/:username` (same `/dev/:username` API). |
 
 Together they behave like a tiny “CDN-ish” stack you can reason about in one afternoon.
 
@@ -62,6 +62,10 @@ npm run dev
 ```
 
 Open the URL Vite prints (usually `http://localhost:5173`). The dev server **proxies** `/dev/*` to `http://localhost:3000`, so you avoid CORS headaches while hacking on the UI.
+
+Share a profile: open **`/u/octocat`** (or any username) for a centered card view with optional cache metadata from response headers.
+
+**Link previews (Open Graph):** In production, **`GET /u/:username`** returns the SPA HTML with crawler-facing `og:*` / `twitter:*` tags, and **`GET /og/:username.png`** serves a generated 1200×630 PNG card (satori + resvg on the origin, edge-cached). Run `cd frontend && npm run build` before `npm run start:origin` so `frontend/dist/index.html` exists for meta injection.
 
 ---
 
